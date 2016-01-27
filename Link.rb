@@ -14,11 +14,13 @@ include StringTool;
 # == リンク
 #
 class Link
-  attr_accessor :from, :to
+  attr_accessor :from, :to, :w
 
-  def initialize(from = nil, to = nil)
+
+  def initialize(from = nil, to = nil, w=0)
      @from = from if from != nil ;
      @to = to if to != nil ;
+     @w = 0
   end
 
   def get_to  

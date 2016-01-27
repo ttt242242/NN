@@ -14,12 +14,13 @@ include StringTool;
 # == シンプルユニット
 #
 class Unit
-  attr_accessor :w, :threshold, :link_list ;
+  attr_accessor :w, :threshold, :link_list, :value ;
 
-  def initialize(w=1, threshold=1)
-    @w = w   ;  #重み
+  def initialize(threshold=0)
+    # @w = w   ;  #重み
     @threshold = threshold ;  #しきい値
     @link_list = [] ;
+    @value = 0.0 ;
   end
 
   #
@@ -30,11 +31,7 @@ class Unit
 
   end
 
-  #重みをセット
-  def set_w(w)
-    @w = w   ;  #重み
-  end
-
+  
   #しきい値をセット
   def set_threshold(threshold)
     @threshold = threshold   ;  #しきい値をセット
@@ -57,7 +54,36 @@ class Unit
   def add_link(link)
     link_list.push(link) ;
   end
+ 
+  #
+  # === 発火するかどうか
+  #     check to fire or not
+  #
+  def is_fire(sum_value)
+    if sum_value > @threshold  
+      @value = 1 
+    elsif sum_value == @threshold
+      @value = 0
+    else
+      @value = -1
+    end
+  end
 
+  #
+  # === ノードの値をセット
+  #     set @value
+  #
+  def set_value(value)
+    @value = value;
+  end
+
+  #
+  # === このノードの値を返す
+  #     return @value
+  #
+  def get_value()
+    return @value ;
+  end
 end
 
 #

@@ -39,9 +39,9 @@ class SimplePerceptron
   # @param input_datas Array
   #
   def initialize_units(unit_num)
-    @output_unit = Unit.new();
+    @output_unit = Unit.new();  #出力unitの生成
     unit_num.times do |unit_num|
-      @input_units.push(Unit.new()) ;
+      @input_units.push(Unit.new()) ; #入力ユニットの生成
     end
   end
 
@@ -55,7 +55,7 @@ class SimplePerceptron
   end
 
   #
-  # === 出力ノード郡の初期化
+  # === 出力ノードの初期化
   # @param unit Unit
   # @param link_num Integer :number of links
   #
@@ -91,8 +91,9 @@ class SimplePerceptron
   end
 
 end
+
 #
-# 実行用
+# 以下テスト用
 #
 if($0 == __FILE__) then
   e = [[1, -1, -1, -1], [1, 1, -1, -1], [1, 1, 1, 1]]  ; #3パターンの訓練データ

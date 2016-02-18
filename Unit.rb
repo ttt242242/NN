@@ -13,11 +13,12 @@ include StringTool;
 #
 # == シンプルユニット
 #
-class Unit
+class Unit < Object
   attr_accessor :w, :threshold, :link_list, :value ;
 
-  def initialize(threshold=0)
+  def initialize(threshold=0, id=nil)
     # @w = w   ;  #重み
+    super(id) ;
     @threshold = threshold ;  #しきい値
     @link_list = [] ;
     @value = 0.0 ;

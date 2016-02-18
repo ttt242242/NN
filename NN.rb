@@ -17,10 +17,13 @@ include StringTool;
 # NNの形 などはこちらで決めてしまう
 #
 class NN 
-  attr_accessor :layers
+  attr_accessor :layers,:links, :node_num, :nodes
   def initialize()
     conf = YAML.load_file("nodeSetting.yml")
-    @layers = [] 
+    @layers = [] ; 
+    @links = [] ;   #配列で階層を表現
+    @nodes = [] ;
+    @node_num = 0 #ノードカウント用
     create_nn(conf)  #設定ファイルからNNを生成
   end
 
@@ -29,12 +32,32 @@ class NN
   #
   def create_nn(conf)
     #入力層、隠れそう、出力層の初期化
-    create_layer(conf[:input_node_num]) 
-    create_hidden_layers(conf[:hidden_layer])
-    create_layer(conf[:output_node_num])
-
+    # create_layer(conf[:input_node_num]) 
+    # create_hidden_layers(conf[:hidden_layer])
+    # create_layer(conf[:output_node_num])
+    create_nodes(conf[:all_node_num])  ;
     #リンクをつなげる
-    create_links(conf)
+    create_links(conf) ; 
+  end
+
+  #
+  # === 一層のノード群の生成
+  #
+  def create_nodes(node_num)
+    node_num.times do |n|
+      layer.push(Unit.new(0,n)) ;
+      @node_num += 1 ;
+    end
+    @layers.push(layer) ;
+  end
+
+  #
+  # === リンクをつなげる
+  #
+  def create_links(links_conf)
+    links_conf.each do |link_conf|
+      @links.push(Link.new(@nodes[links_conf[:from]],@nodes[links_conf[:to]]));
+    end
   end
 
 
@@ -44,7 +67,8 @@ class NN
   def create_layer(node_num)
     layer = [] 
     node_num.times do |n|
-      layer.push(Unit.new)
+      layer.push(Unit.new(0,@node_num))
+      @node_num += 1
     end
     @layers.push(layer)
   end
@@ -59,13 +83,7 @@ class NN
   end
 
   
-  #
-  # === リンクをつなげる
-  #
-  def create_links(conf)
-    
-  end
-
+  
   #訓練データと出力データから学習
     #結果からの各リンクの更新について
 end

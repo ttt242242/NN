@@ -19,11 +19,12 @@ include StringTool;
 # class MakeSetting
 #     
 # end
-conf = Hash.new() ;
-
+conf = Hash.new() 
+conf[:all_node_num] = 0 
 #入力層のノード数
-print "input input's node num(integer)"
-conf[:input_node_num] = gets.to_i
+print "input input's node num(integer)" ;
+conf[:input_node_num] = gets.to_i  ;
+conf[:all_node_num] += conf[:input_node_num]  ;
 #隠れそうの層数
 print "input number of the layer(integer)"
 layer_num = gets.to_i
@@ -31,14 +32,21 @@ conf[:hidden_layer] = Array.new
 layer_num.times do 
   #層数分繰り返す
   print "input node num in layer #{layer_num}"
-  conf[:hidden_layer].push(gets.to_i)
+  node_num = gets.to_i ;
+  conf[:hidden_layer].push(node_num) ;
+  conf[:all_node_num] += node_num ;
 end
   
 
 #出力層のノード数
 print "input number of output's node(integer)"
 conf[:output_node_num] = gets.to_i
+conf[:all_node_num] += conf[:output_node_num] ;
 
-makeYamlFile("nodeSetting.yml", conf) ;
+conf[:layer_length] = layer_num + 2 
+
+conf[:links_conf] =[{:from => , :to => }]
+
+makeYamlFile("nodeSetting.yml", conf) 
 
 

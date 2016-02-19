@@ -4,11 +4,13 @@
 $LOAD_PATH.push(File::dirname($0)) ;
 require "pry"
 require "yaml"
-require '/home/okano/lab/tkylibs/rubyOkn/BasicTool'
-require '/home/okano/lab/tkylibs/rubyOkn/StringTool'
+# require '/home/okano/lab/tkylibs/rubyOkn/BasicTool'
+# require '/home/okano/lab/tkylibs/rubyOkn/StringTool'
+require 'rubyOkn/BasicTool'
+require 'rubyOkn/Object'
 
 include BasicTool
-include StringTool;
+# include StringTool;
 
 #
 # == シンプルユニット

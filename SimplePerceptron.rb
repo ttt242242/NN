@@ -12,8 +12,8 @@ require "pry"
 require "yaml"
 require "Unit"
 require "Link"
-require '/home/okano/lab/tkylibs/rubyOkn/BasicTool'
-require '/home/okano/lab/tkylibs/rubyOkn/StringTool'
+# require '/home/okano/lab/tkylibs/rubyOkn/BasicTool'
+# require '/home/okano/lab/tkylibs/rubyOkn/StringTool'
 
 include BasicTool
 include StringTool;

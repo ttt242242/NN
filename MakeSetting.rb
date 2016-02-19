@@ -5,11 +5,11 @@ $LOAD_PATH.push(File::dirname($0)) ;
 require "pry"
 require "yaml"
 require 'rubyOkn/BasicTool'
-require 'rubyOkn/StringTool'
-require 'SimplePerceptron'
+# require 'rubyOkn/StringTool'
+# require 'SimplePerceptron'
 
 include BasicTool
-include StringTool;
+# include StringTool;
 
 
 #
@@ -45,7 +45,7 @@ conf[:all_node_num] += conf[:output_node_num] ;
 
 conf[:layer_length] = layer_num + 2 
 
-conf[:links_conf] =[{:from => , :to => }]
+conf[:links_conf] =[{:from =>0, :to =>2 }, {:from =>1, :to =>3 },{:from =>0, :to =>4 },{:from =>0, :to =>3 },{:from =>1, :to =>3 },{:from =>3, :to =>5 },{:from =>4, :to =>5 },{:from =>2, :to =>5 }]
 
 makeYamlFile("nodeSetting.yml", conf) 
 

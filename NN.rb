@@ -4,12 +4,14 @@
 $LOAD_PATH.push(File::dirname($0)) ;
 require "pry"
 require "yaml"
-require '/home/okano/lab/tkylibs/rubyOkn/BasicTool'
-require '/home/okano/lab/tkylibs/rubyOkn/StringTool'
-require 'SimplePerceptron'
+require "Unit"
+require "Link"
+# require '/home/okano/lab/tkylibs/rubyOkn/BasicTool'
+require 'rubyOkn/BasicTool'
+# require 'SimplePerceptron'
 
 include BasicTool
-include StringTool;
+# include StringTool;
 
 
 #
@@ -18,6 +20,7 @@ include StringTool;
 #
 class NN 
   attr_accessor :layers,:links, :node_num, :nodes
+
   def initialize()
     conf = YAML.load_file("nodeSetting.yml")
     @layers = [] ; 
@@ -35,20 +38,22 @@ class NN
     # create_layer(conf[:input_node_num]) 
     # create_hidden_layers(conf[:hidden_layer])
     # create_layer(conf[:output_node_num])
+
     create_nodes(conf[:all_node_num])  ;
     #リンクをつなげる
-    create_links(conf) ; 
+    create_links(conf[:links_conf]) ; 
   end
 
   #
   # === 一層のノード群の生成
   #
   def create_nodes(node_num)
+    # layer = []  ;
     node_num.times do |n|
-      layer.push(Unit.new(0,n)) ;
-      @node_num += 1 ;
+     @nodes.push(Unit.new(0,n)) ;
+      # @node_num += 1 ;
     end
-    @layers.push(layer) ;
+    # @layers.push(layer) ;
   end
 
   #
@@ -56,8 +61,9 @@ class NN
   #
   def create_links(links_conf)
     links_conf.each do |link_conf|
-      @links.push(Link.new(@nodes[links_conf[:from]],@nodes[links_conf[:to]]));
+      @links.push(Link.new(@nodes[link_conf[:from]],@nodes[link_conf[:to]]));
     end
+
   end
 
 
@@ -93,7 +99,7 @@ end
 # 実行用
 #
 if($0 == __FILE__) then
-  
+  t = NN.new   
 end
 
 

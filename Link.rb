@@ -40,6 +40,14 @@ class Link
     @from = from ;
   end
 
+  def get_weight()
+    return @w ;
+  end
+  
+  def set_weight(w)
+    @w = w ;
+  end
+
 end
 
 #

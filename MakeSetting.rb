@@ -45,7 +45,22 @@ conf[:all_node_num] += conf[:output_node_num] ;
 
 conf[:layer_length] = layer_num + 2 
 
-conf[:links_conf] =[{:from =>0, :to =>2 }, {:from =>1, :to =>3 },{:from =>0, :to =>4 },{:from =>0, :to =>3 },{:from =>1, :to =>3 },{:from =>3, :to =>5 },{:from =>4, :to =>5 },{:from =>2, :to =>5 }]
+conf[:links_conf] =[{:from =>0, :to =>2 }, {:from =>1, :to =>3 },{:from =>0, :to =>4 },{:from =>0, :to =>3 },{:from =>1, :to =>4 },{:from =>1, :to =>2 },{:from =>3, :to =>5 },{:from =>4, :to =>5 },{:from =>2, :to =>5 }]
+
+conf[:training_data] => [
+{:input => {0 => 0,1 => 0},:output =>{5 => 0}}, 
+{:input => {0 => 0,1 => 1},:output =>{5 => 0}},
+{:input => {0 => 0,1 => 0},:output =>{5 => 0}},
+{:input => {0 => 1,1 => 0},:output =>{5 => 0}},
+{:input => {0 => 1,1 => 1},:output =>{5 => 1}},
+{:input => {0 => 1,1 => 0},:output =>{5 => 0}},
+{:input => {0 => 2,1 => 0},:output =>{5 => 1}},
+{:input => {0 => 2,1 => 1},:output =>{5 => 0}},
+{:input => {0 => 2,1 => 0},:output =>{5 => 0}},
+{:input => {0 => 3,1 => 0},:output =>{5 => 1}},
+{:input => {0 => 3,1 => 1},:output =>{5 => 1}},
+{:input => {0 => 3,1 => 0},:output =>{5 => 1}}
+]
 
 makeYamlFile("nodeSetting.yml", conf) 
 

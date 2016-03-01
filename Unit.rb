@@ -87,6 +87,10 @@ class Unit < Object
   def get_value()
     return @value ;
   end
+
+  def get_id()
+    return @id ;
+    end
 end
 
 #

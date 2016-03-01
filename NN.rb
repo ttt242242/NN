@@ -19,19 +19,21 @@ include BasicTool
 # NNの形 などはこちらで決めてしまう
 #
 class NN 
-  attr_accessor :layers,:links, :node_num, :nodes, :conf, :errs, :output_nodes
+  attr_accessor :layers,:links, :node_num, :nodes, :conf, :errs, :output_nodes, :n
 
-  def initialize()
-    @conf = YAML.load_file("nodeSetting.yml")
+  def initialize(conf)
+    @conf = conf ;
     @layers = [] ; 
     @links = [] ;   #配列で階層を表現
     @nodes = [] ;
+    @errs = {} ;
+    @n = 0.1 ;
     @output_nodes = [] ;
     @input_datas = [] ;
     @teacher_datas = {} ;
     @node_num = 0 #ノードカウント用
     @traning_data = @conf[:training_data] ;
-    set_input_teacher_value() ;
+    # set_input_teacher_value() ;
     create_nn()  #設定ファイルからNNを生成
   end
 
@@ -90,13 +92,13 @@ class NN
   #
   # === 入力と伝搬
   #
-  def propagation(input)
+  def propagation(input_data)
     input_practice_data(@conf[:input_node_num], input_data) ;
 
     @links.each do |link|
-       from_node = @node[link[:from]] ;
-       to_node = @node[link[:to]] ;
-       toNode.set_value(link.w * to_node.get_value()) ;  #重み付きの値を代入
+       from_node = @nodes[link.get_from.get_id] ;
+       to_node = @nodes[link.get_to.get_id] ;
+       to_node.set_value(link.w * to_node.get_value()) ;  #重み付きの値を代入
     end
   end
 
@@ -113,11 +115,12 @@ class NN
   #
   # === 出力値との誤差を求める
   #
-  def calc_err(errs)
-    i = @conf[:all_node_num] ;
+  def calc_err(teacher_datas)
+    i = @conf[:all_node_num]-1 ;
     min_output_num = @conf[:all_node_num]-@conf[:output_node_num] ;
     while i > min_output_num
-      errs[i] = -1 * ( @nodes[i].get_value - @teacher_datas[:i] ) ;
+      binding.pry ;
+      @errs[i] = -1 * ( @nodes[i].get_w - teacher_data[:i] ) ;
       i -= 1 ;
     end
   end
@@ -125,7 +128,7 @@ class NN
   #
   # === 誤差逆伝搬
   #
-  def back_propagation(errs)
+  def back_propagation()
     delta = {} ;
     @links.reverse_each do |link|
 
@@ -134,14 +137,14 @@ class NN
 
       # if errs[i] がnillじゃなければ（出力層に直結したリンクであれば)
       if is_output_node(from_node)  #出力ノードに結合していれば
-        delta[link] = errs[to_node] * link.get_to.get_w *(1.0 - link.get_to.get_w);
+        delta[link] = @errs[to_node] * to_node.get_w * (1.0 - to_node.get_value);
       else
-        delta[link] = calc_delta(delta) * link.get_to.get_w *(1.0 - link.get_to.get_w) ;
+        delta[link] = calc_delta(delta, link) * to_node.get_value * (1.0 - to_node.get_value) ;
       end
       # else errsを計算 の代入
       # delta の計算
       # delta_weightの計算
-      delta_weight = - @n * delta[link] *link.get_from.get_w ;
+      delta_weight = -1 * @n * delta[link] *link.get_from.get_value ;
       link.set_weight( link.get_weight + delta_weight ) ;
     end
   end
@@ -149,14 +152,15 @@ class NN
   #
   # === 上のノード
   #
-  def calc_delta(delta)
-    from = link.to_node ;
+  def calc_delta(delta, link)
+    from = link.get_to ;
     sum = 0 ;
-    @links.each do link
-       if link.from_node == from
-         sum += link.get_weight * delta[link] ;
+    @links.each do |l|
+       if l.get_from == from
+         sum += l.get_weight * delta[l] ;
        end
     end
+
     return sum ;
   end
 
@@ -179,6 +183,7 @@ class NN
       if node.get_id == i
         return true ;
       end
+      i -= 1 ;
      end
     return false ;
   end
@@ -227,7 +232,17 @@ end
 # 実行用
 #
 if($0 == __FILE__) then
-  t = NN.new   
+  conf = YAML.load_file("nodeSetting.yml") ;
+  nn = NN.new(conf) ;
+  training_num = 100 ;
+  training_num.times do |num|
+    training_data = conf[:training_data][rand(conf[:training_data].size)][:input] ;
+    teacher_datas= conf[:training_data][rand(conf[:training_data].size)][:output] ;
+    nn.propagation(training_data) ;
+    nn.calc_err(teacher_datas) ;
+    nn.back_propagation ;
+  end
+  binding.pry ;
 end
 
 

@@ -16,13 +16,15 @@ include BasicTool
 # == シンプルユニット
 #
 class Unit < Object
-  attr_accessor :w, :threshold, :link_list, :value ;
+  attr_accessor :w, :threshold, :link_list, :value, :from_links, :to_links ;
 
   def initialize(threshold=0, id=nil)
     # @w = w   ;  #重み
     super(id) ;
     @threshold = threshold ;  #しきい値
     @link_list = [] ;
+    @from_links = [] ;
+    @to_links = [] ;
     @value = 0.0 ;
   end
 
@@ -51,6 +53,22 @@ class Unit < Object
     return @threshold ;
   end
 
+  def set_from_link(link)
+    @from_links.push(link) ;
+  end
+  
+  def set_to_link(link)
+    @to_links.push(link) ;
+  end
+
+  def get_from_links()
+    return @from_links ;
+  end
+
+  def get_to_links()
+    return @to_links ;
+  end
+
   #
   # === link_listにlinkを加える
   #
@@ -63,13 +81,14 @@ class Unit < Object
   #     check to fire or not
   #
   def is_fire(sum_value)
-    if sum_value > @threshold  
-      @value = 1 
-    elsif sum_value == @threshold
-      @value = 0
-    else
-      @value = -1
-    end
+    @value = sigmoid_fun(sum_value)  ;
+    # if sum_value > @threshold  
+    #   @value = 1 
+    # elsif sum_value == @threshold
+    #   @value = 0
+    # else
+    #   @value = -1
+    # end
   end
 
   #

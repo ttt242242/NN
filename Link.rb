@@ -21,7 +21,8 @@ class Link
   def initialize(from = nil, to = nil, w=0)
      @from = from if from != nil ;
      @to = to if to != nil ;
-     @w = 0
+     # @w = rand() ;
+     @w = 0.5 ;
   end
 
   def get_to  

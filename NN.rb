@@ -83,22 +83,36 @@ class NN
   #
   def create_links(links_conf)
     links_conf.each do |link_conf|
-      @links.push(Link.new(@nodes[link_conf[:from]],@nodes[link_conf[:to]]));
+      link = Link.new(@nodes[link_conf[:from]],@nodes[link_conf[:to]]) ;
+      @links.push(link);
+      @nodes[link_conf[:from]].set_to_link(link) ;
+      @nodes[link_conf[:to]].set_from_link(link) ;
     end
-
   end
-
 
   #
   # === 入力と伝搬
   #
   def propagation(input_data)
     input_practice_data(@conf[:input_node_num], input_data) ;
+    # @links.each do |link|
+    #    from_node = @nodes[link.get_from.get_id] ;
+    #    to_node = @nodes[link.get_to.get_id] ;
+    #    to_node.is_fire(link.w * to_node.get_value()) ;  #重み付きの値を代入
+    # end
 
-    @links.each do |link|
-       from_node = @nodes[link.get_from.get_id] ;
-       to_node = @nodes[link.get_to.get_id] ;
-       to_node.set_value(link.w * to_node.get_value()) ;  #重み付きの値を代入
+    # 全ノードの更新
+    # 下のノードから
+    @nodes.each do |node|
+      if !is_input_node(node) 
+        from_links = node.get_from_links ;
+        sum = 0.0 ;
+        from_links.each do |link|
+          sum += link.get_from.get_value() * link.get_weight() ;
+        end
+        node.is_fire(sum) ;
+        p node.get_value
+      end
     end
   end
 
@@ -117,11 +131,13 @@ class NN
   #
   def calc_err(teacher_datas)
     i = @conf[:all_node_num]-1 ;
-    min_output_num = @conf[:all_node_num]-@conf[:output_node_num] ;
+    min_output_num = @conf[:all_node_num]-@conf[:output_node_num] -1 ;
     while i > min_output_num
-      binding.pry ;
-      @errs[i] = -1 * ( @nodes[i].get_w - teacher_data[:i] ) ;
+      begin
+      @errs[i] = -1 * ( @nodes[i].get_value - teacher_datas[i] ) ;
       i -= 1 ;
+      rescue
+      end
     end
   end
 
@@ -136,16 +152,17 @@ class NN
       from_node = link.get_from ;
 
       # if errs[i] がnillじゃなければ（出力層に直結したリンクであれば)
-      if is_output_node(from_node)  #出力ノードに結合していれば
-        delta[link] = @errs[to_node] * to_node.get_w * (1.0 - to_node.get_value);
+      if is_output_node(to_node)  #出力ノードに結合していれば
+        begin
+        delta[link] = @errs[to_node.id] * to_node.get_value * (1.0 - to_node.get_value);
+        rescue
+          binding.pry ;
+          end
       else
-        delta[link] = calc_delta(delta, link) * to_node.get_value * (1.0 - to_node.get_value) ;
+        delta[link] = calc_delta(delta,link) * to_node.get_value * (1.0 - to_node.get_value) ;
       end
-      # else errsを計算 の代入
-      # delta の計算
-      # delta_weightの計算
-      delta_weight = -1 * @n * delta[link] *link.get_from.get_value ;
-      link.set_weight( link.get_weight + delta_weight ) ;
+      delta_weight = -1.0 * @n * delta[link] *link.get_from.get_value ;
+      link.set_weight(link.get_weight + delta_weight ) ;
     end
   end
  
@@ -176,8 +193,8 @@ class NN
   # === 出力ノードかどうかの判定
   #
   def is_output_node(node)
-    i = @conf[:all_node_num] ;
-     min_output_num = @conf[:all_node_num]-@conf[:output_node_num] ;
+    i = @conf[:all_node_num] -1;
+    min_output_num = @conf[:all_node_num]-@conf[:output_node_num]-1 ;
 
      while i > min_output_num
       if node.get_id == i
@@ -234,7 +251,7 @@ end
 if($0 == __FILE__) then
   conf = YAML.load_file("nodeSetting.yml") ;
   nn = NN.new(conf) ;
-  training_num = 100 ;
+  training_num = 10000 ;
   training_num.times do |num|
     training_data = conf[:training_data][rand(conf[:training_data].size)][:input] ;
     teacher_datas= conf[:training_data][rand(conf[:training_data].size)][:output] ;
@@ -242,7 +259,11 @@ if($0 == __FILE__) then
     nn.calc_err(teacher_datas) ;
     nn.back_propagation ;
   end
-  binding.pry ;
+
+  puts "##############################"
+  nn.links.each do |link|
+    p link.get_weight ;
+  end
 end
 
 

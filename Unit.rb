@@ -7,7 +7,7 @@ require "yaml"
 # require '/home/okano/lab/tkylibs/rubyOkn/BasicTool'
 # require '/home/okano/lab/tkylibs/rubyOkn/StringTool'
 require 'rubyOkn/BasicTool'
-require 'rubyOkn/Object'
+# require 'rubyOkn/Object'
 
 include BasicTool
 # include StringTool;
@@ -15,13 +15,16 @@ include BasicTool
 #
 # == シンプルユニット
 #
-class Unit < Object
-  attr_accessor :w, :threshold, :link_list, :value, :from_links, :to_links ;
+# class Unit < Object
+class Unit
+  attr_accessor :id, :w, :threshold, :link_list, :value, :from_links, :to_links ;
 
   def initialize(threshold=0, id=nil)
     # @w = w   ;  #重み
-    super(id) ;
-    @threshold = threshold ;  #しきい値
+    # super(id) ;
+    @id = id ;
+    # @threshold = threshold ;  #しきい値
+    @threshold = 0.5;  #しきい値
     @link_list = [] ;
     @from_links = [] ;
     @to_links = [] ;
@@ -83,9 +86,9 @@ class Unit < Object
   def is_fire(sum_value)
     @value = sigmoid_fun(sum_value)  ;
     # if sum_value > @threshold  
-    #   @value = 1 
-    # elsif sum_value == @threshold
-    #   @value = 0
+    #   @value = 1.0
+    # elsif sum_value <= @threshold
+    #   @value = 0.0
     # else
     #   @value = -1
     # end

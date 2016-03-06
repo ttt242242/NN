@@ -54,17 +54,9 @@ conf[:links_conf] =[{:from =>0, :to =>2 }, {:from =>1, :to =>3 },{:from =>0, :to
 
 conf[:training_data] = [
 {:input => {0 => 0,1 => 0},:output =>{5 => 0}}, 
-{:input => {0 => 0,1 => 1},:output =>{5 => 0}},
-{:input => {0 => 0,1 => 0},:output =>{5 => 0}},
-{:input => {0 => 1,1 => 0},:output =>{5 => 0}},
-{:input => {0 => 1,1 => 1},:output =>{5 => 1}},
-{:input => {0 => 1,1 => 0},:output =>{5 => 0}},
-{:input => {0 => 2,1 => 0},:output =>{5 => 1}},
-{:input => {0 => 2,1 => 1},:output =>{5 => 0}},
-{:input => {0 => 2,1 => 0},:output =>{5 => 0}},
-{:input => {0 => 3,1 => 0},:output =>{5 => 1}},
-{:input => {0 => 3,1 => 1},:output =>{5 => 1}},
-{:input => {0 => 3,1 => 0},:output =>{5 => 1}}
+{:input => {0 => 0,1 => 1},:output =>{5 => 0}}, 
+{:input => {0 => 1,1 => 0},:output =>{5 => 0}}, 
+{:input => {0 => 1,1 => 1},:output =>{5 => 1}}
 ]
 
 makeYamlFile("nodeSetting.yml", conf) 

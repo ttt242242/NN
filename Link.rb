@@ -15,14 +15,15 @@ include BasicTool
 # == リンク
 #
 class Link
-  attr_accessor :from, :to, :w
+  attr_accessor :id,:from, :to, :w
 
 
-  def initialize(from = nil, to = nil, w=0)
+  def initialize(from = nil, to = nil, id)
      @from = from if from != nil ;
      @to = to if to != nil ;
      # @w = rand() ;
-     @w = 0.5 ;
+     @w = rand(-1.0...1.0) ;
+     @id = id ;
   end
 
   def get_to  

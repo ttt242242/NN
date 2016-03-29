@@ -1,0 +1,48 @@
+---
+:all_node_num: 6
+:input_node_num: 2
+:hidden_layer:
+- 3
+:output_node_num: 1
+:layer_length: 3
+:links_conf:
+- :from: 0
+  :to: 2
+- :from: 1
+  :to: 3
+- :from: 0
+  :to: 4
+- :from: 0
+  :to: 3
+- :from: 1
+  :to: 4
+- :from: 1
+  :to: 2
+- :from: 3
+  :to: 5
+- :from: 4
+  :to: 5
+- :from: 2
+  :to: 5
+:training_data:
+- :input:
+    0: 0
+    1: 0
+  :output:
+    5: 0
+- :input:
+    0: 0
+    1: 1
+  :output:
+    5: 1
+- :input:
+    0: 1
+    1: 0
+  :output:
+    5: 1
+- :input:
+    0: 1
+    1: 1
+  :output:
+    5: 1
+:threshold: 0.5

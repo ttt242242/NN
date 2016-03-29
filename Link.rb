@@ -4,12 +4,10 @@
 $LOAD_PATH.push(File::dirname($0)) ;
 require "pry"
 require "yaml"
-# require '/home/okano/lab/tkylibs/rubyOkn/BasicTool'
-# require '/home/okano/lab/tkylibs/rubyOkn/StringTool'
-require 'rubyOkn/BasicTool'
+# require 'rubyOkn/BasicTool'
+require '/home/okano/lab/oknLib/rubyOkn/BasicTool'
 
 include BasicTool
-# include StringTool;
 
 #
 # == リンク
@@ -17,36 +15,52 @@ include BasicTool
 class Link
   attr_accessor :id,:from, :to, :w
 
-
   def initialize(from = nil, to = nil, id)
      @from = from if from != nil ;
      @to = to if to != nil ;
-     # @w = rand() ;
-     @w = rand(-1.0...1.0) ;
+     @w = rand(-1.0...1.0) ;      #重みを決定
      @id = id ;
   end
 
+  #
+  # === linkのto方向のノードを取得
+  #
   def get_to  
     return @to ;
   end
 
+  #
+  # === linkの from 方向のノードを取得
+  #
   def get_from
     return @from ;
   end
 
+  #
+  # === linkのto方向のノードをセット
+  #
   def set_to(to)
     @to = to ;
   end
 
+  #
+  # === linkのfrom方向のノードをセット
+  #
   def set_from(from)
     @from = from ;
   end
 
-  def get_weight()
+  #
+  # === linkの重みを返す
+  #
+  def get_w()
     return @w ;
   end
-  
-  def set_weight(w)
+
+  #
+  # === linkの重みをセット
+  #
+  def set_w(w)
     @w = w ;
   end
 

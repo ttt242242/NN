@@ -4,79 +4,47 @@
 $LOAD_PATH.push(File::dirname($0)) ;
 require "pry"
 require "yaml"
-require "Unit"
-require "Link"
-# require '/home/okano/lab/tkylibs/rubyOkn/BasicTool'
-require 'rubyOkn/BasicTool'
-# require 'SimplePerceptron'
+require "/home/okano/NN/Node"
+require "/home/okano/NN/Link"
+require '/home/okano/lab/oknLib/rubyOkn/BasicTool'
 
 include BasicTool
-# include StringTool;
 
 
 #
-# == NNの実験用　3層のNNの実装 シンプルなパーセプトロンとは別で
+# == フィードフォワードネットワークの実験用　3層の実装 シンプルなパーセプトロンとは別で
 # NNの形 などはこちらで決めてしまう
 #
 class NN 
-  attr_accessor :layers,:links, :node_num, :nodes, :conf, :errs, :output_nodes, :n
+  attr_accessor :links, :nodes, :conf, :errs, :threshold,:n
 
   def initialize(conf)
     @conf = conf ;
-    @layers = [] ; 
-    @links = [] ;   #配列で階層を表現
+    @links = [] ;   
     @nodes = [] ;
-    @errs = {} ;
-    @n = 0.1 ;
-    @output_nodes = [] ;
-    @input_datas = [] ;
+    @errs = {} ;    #出力層と教師データとの誤差の出力
+    @n = 0.1 ;  # 学習率
     @teacher_datas = {} ;
-    @node_num = 0 #ノードカウント用
-    @traning_data = @conf[:training_data] ;
-    # set_input_teacher_value() ;
+    @threshold = conf[:threshold] ; #しきい値
     create_nn()  #設定ファイルからNNを生成
   end
-
-  #
-  # === 訓練データと教師データの格納
-  #
-  def set_input_teacher_value()
-    input_datas = @conf[:input_datas] ;
-
-    i = @conf[:all_node_num] ;
-    min_output_num = @conf[:all_node_num]-@conf[:output_node_num] ;
-    while i > min_output_num
-      @teacher_datas[:i] = @nodes[i].get_value ;
-      i -= 1 ;
-    end
-  end
-
+ 
   #
   # === 設定ファイルからNNを生成
   #
   def create_nn()
-    #入力層、隠れそう、出力層の初期化
-    # create_layer(conf[:input_node_num]) 
-    # create_hidden_layers(conf[:hidden_layer])
-    # create_layer(conf[:output_node_num])
-
-    create_nodes(@conf[:all_node_num])  ;
-    #リンクをつなげる
-    create_links(@conf[:links_conf]) ; 
+    create_nodes(@conf[:all_node_num]);  #入力層、隠れそう、出力層の初期化
+    create_links(@conf[:links_conf]);  #リンクをつなげる
   end
 
   #
   # === 一層のノード群の生成
   #
   def create_nodes(node_num)
-    # layer = []  ;
     node_num.times do |n|
-     @nodes.push(Unit.new(0,n)) ;
-      # @node_num += 1 ;
+     @nodes.push(Node.new(0,n)) ;
     end
-    # @layers.push(layer) ;
   end
-
 
   #
   # === リンクをつなげる
@@ -94,43 +62,19 @@ class NN
   # === 入力と伝搬
   #
   def propagation(input_data)
+    input_practice_data(@conf[:input_node_num], input_data) ; # 初期のインプット
+
+    # 全ノードの更新  下のノードから
     @nodes.each do |node|
-      node.set_value(0) ;
-    end
-    input_practice_data(@conf[:input_node_num], input_data) ;
-
-    # @links.each do |link|
-    #    from_node = @nodes[link.get_from.get_id] ;
-    #    to_node = @nodes[link.get_to.get_id] ;
-    #    to_node.is_fire(link.w * to_node.get_value()) ;  #重み付きの値を代入
-    # end
-
-    # 全ノードの更新
-    # 下のノードから
-    #
-        # puts "##########"
-    @nodes.each do |node|
-
-      if !is_input_node(node) 
+      if !input_node?(node)  # 入力層でなければ
         from_links = node.get_from_links ;
-        sum = 0.0 ;
-        # puts node.id
+        sum_value = 0.0 ;
         from_links.each do |link|
-          # puts "linkid #{link.id}"
-          # puts "node.value #{node.get_value()}, linkva #{link.get_weight()}"
-          sum += link.get_from.get_value() * link.get_weight() ;
+          sum_value += link.get_from.get_w() * link.get_w() ;
         end
-        node.is_fire(sum - 0.5) ;
-        # p "node.value #{node.get_value},sum #{sum}"
-        # puts "sum #{sum}"
-        
+        node.input(sum_value - @threshold) ;
       end
     end
-
-        # puts "---------"
-    # @nodes.each do |node|
-      # puts "node.id#{node.id} , node.get_value #{node.get_value}"
-    # end
   end
 
   
@@ -139,7 +83,7 @@ class NN
   #
   def input_practice_data(input_node_num,input_data)
     input_node_num.times do |n|
-      @nodes[n].set_value(input_data[n]) ;
+      @nodes[n].set_w(input_data[n]) ;
     end
   end
 
@@ -150,44 +94,28 @@ class NN
     i = @conf[:all_node_num]-1 ;
     min_output_num = @conf[:all_node_num]-@conf[:output_node_num] -1 ;
     while i > min_output_num
-      begin
-      @errs[i] = -1 * (teacher_datas[i] - @nodes[i].get_value ) ;
-      # binding.pry ;
-      # puts @errs[i]
+      @errs[i] = -1 * (teacher_datas[i] - @nodes[i].get_w ) ;
       i -= 1 ;
-      rescue
       end
-    end
   end
 
   #
   # === 誤差逆伝搬
+  # 各リンク毎
   #
   def back_propagation()
     delta = {} ;
     @links.reverse_each do |link|
       to_node = link.get_to ;
       from_node = link.get_from ;
-      
-      # puts to_node.id
-      # if errs[i] がnillじゃなければ（出力層に直結したリンクであれば)
-      if is_output_node(to_node)  #出力ノードに結合していれば
-        # puts "to_nodeid , #{to_node.id}"
-        
-        delta[link.id] = @errs[to_node.id] * to_node.get_value * (1.0 - to_node.get_value);
-        # binding.pry ;
-        # puts "delta #{delta}"
-      else
-        delta[link.id] = calc_delta(delta,link) * to_node.get_value * (1.0 - to_node.get_value) ;
+      if output_node?(to_node)  #出力ノードに結合していれば
+        delta[link.id] = @errs[to_node.id] * to_node.get_w * (1.0 - to_node.get_w);
+      else #出力層でなければ
+        delta[link.id] = calc_delta(delta,link) * to_node.get_w * (1.0 - to_node.get_w) ;
       end
-      # delta_weight = -1.0 * @n * delta[link] *link.get_from.get_value ;
-      delta_weight = -1.0 * @n * delta[link.id] * from_node.get_value();
-     k= link.get_weight + delta_weight
-     # puts "link.id #{link.id}, #{link.get_weight} => #{k}"
-      link.set_weight(k) ;
+      delta_weight = -1.0 * @n * delta[link.id] * from_node.get_w();
+      link.set_w(link.get_w + delta_weight) ;
     end
-    # puts "#######################"
-    # puts delta
   end
  
   #
@@ -195,144 +123,99 @@ class NN
   #
   def calc_delta(delta, link)
     from = link.get_to ;
-    sum = 0.0 ;
-    # puts "nodeId #{from.id}"
-    from.get_to_links.each do |l| 
-       sum += l.get_weight * delta[l.id] 
+    sum_value = 0.0 ;
+    from.get_to_links.each do |link| 
+       sum_value += link.get_w * delta[link.id] 
     end
-    # puts "sum #{sum}"
-    return sum ;
+    return sum_value ;
   end
 
   #
   # === 入力ノードかどうかの判定
   #
-  def is_input_node(node)
-   return true if node.get_id <  @conf[:input_node_num]
-   return false ;  
+  def input_node?(node)
+    if node.get_id <  @conf[:input_node_num]
+      return true  ;
+    else
+      return false ;  
+    end
   end
 
   #
   # === 出力ノードかどうかの判定
+  # ノードの後ろから数える
   #
-  def is_output_node(node)
-    i = @conf[:all_node_num] -1;
-    min_output_num = @conf[:all_node_num]-@conf[:output_node_num]-1 ;
-     while i > min_output_num
-      if node.get_id == i
-        return true ;
-      end
-      i -= 1 ;
-     end
+  def output_node?(node)
+    min_output_num = @conf[:all_node_num] - @conf[:output_node_num] -1;  #出力ノードの中で最も小さいid
+    if node.id > min_output_num 
+      return true ;
+    else
     return false ;
-  end
-
-
-  #
-  # === 訓練するメソッド
-  #
-  def training
-    
-  end
-
-  #
-  #  ================================================
-  #
-
-  #
-  # === 一層のノード群の生成
-  #
-  def create_layer(node_num)
-    layer = [] 
-    node_num.times do |n|
-      layer.push(Unit.new(0,@node_num))
-      @node_num += 1
-    end
-    @layers.push(layer)
-  end
-
-  #
-  # === 隠れ層のノードの生成
-  #
-  def create_hidden_layers(conf)
-    conf[:hidden_layer].each do |node_num|
-      create_layer(node_num)
     end
   end
 
-  
-  
-  #訓練データと出力データから学習
-    #結果からの各リンクの更新について
+ def training_one_time(training_datas)
+    training_data = training_datas[:input] ;
+    teacher_datas= training_datas[:output] ;
+    propagation(training_data) ;
+    calc_err(teacher_datas) ;
+    back_propagation ;
+
+    nodes.last.get_w ;
+    teacher_datas= training_datas[:output] ;
+    err = ( nodes.last.get_w - teacher_datas[nodes.last.id] ).abs
+    return err
+end 
 end
 
 
 #
-# 実行用
+# === トレーニング
 #
-if($0 == __FILE__) then
-  conf = YAML.load_file("nodeSetting.yml") ;
-  nn = NN.new(conf) ;
-
-  # 訓練
-  training_num = 10000 ;
-  # training_num.times do |num|
-  err = 100 ;
+def training(nn, conf)
   count = 0 ;
-  # while (1)
   100000.times do 
-  # puts '####'
-    t = rand(conf[:training_data].size)
-    training_data = conf[:training_data][t][:input] ;
-    teacher_datas= conf[:training_data][t][:output] ;
-    # p "training_data #{training_data}, teacher_datas #{teacher_datas}"
-    nn.propagation(training_data) ;
-    nn.calc_err(teacher_datas) ;
-    nn.back_propagation ;
-
-    nn.nodes.last.get_value ;
-    teacher_datas= conf[:training_data][t][:output] ;
-    # p teacher_datas[5]
-    err = ( nn.nodes.last.get_value - teacher_datas[5] ).abs
-    # puts err
+    t = rand(conf[:training_data].size-1)
+    err = nn.training_one_time(conf[:training_data][t])    
     if err < 0.01
-      count += 1
+      count += 1 ;    #教師データとの誤差が小さければ
     else
       count = 0 ;
     end
-
-    if count >10
-        break ;
-    end
-
+   break  if count > 100 # 正解が連続100回持続すれば
   end
+end
 
-  #テスト
-  # puts "##############################"
+
+
+def test(nn, conf)
   test_num = 100 ;
   test_num.times do |num|
     t = rand(conf[:training_data].size)
     training_data = conf[:training_data][t][:input] ;
     nn.propagation(training_data) ;
-    puts "############## Node  ##############"
-    nn.nodes.each do |node|
-      p node.get_value ;
-    end
     teacher_datas= conf[:training_data][t][:output] ;
-    p teacher_datas[5]
-    # puts nn.nodes.last.value-teacher_datas[5]
-  end
 
-  puts "Link############################"
-  nn.links.each do |link|
-    p link.get_weight ;
+    puts "#{ nn.nodes.last.get_w.round(3) },#{ teacher_datas[5] }"
+    if ( nn.nodes.last.get_w.round(3)- teacher_datas[5] ).abs < 0.1
+      puts "○" ;
+    else
+      puts "☓" ;
+    end
   end
-  #
-  # puts "############################"
-  # nn.nodes.each do |node|
-  #   p node.get_value ;
-  # end
+end
 
+#
+# 実行用
+#
+if($0 == __FILE__) then
+  conf = YAML.load_file("nn_setting.yml") ;
+  nn = NN.new(conf) ;
+  # 訓練
+  training_num = 10000 ;
+  err = 100 ;
+  training(nn, conf) ; #訓練
+  test(nn, conf) ; #テスト
 end
 
 

@@ -1,0 +1,298 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Top Level Namespace
+  
+    &mdash; Documentation by YARD 0.8.7.4
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '';
+  framesUrl = "frames.html#!top-level-namespace.html";
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index</a> &raquo;
+    
+    
+    <span class="title">Top Level Namespace</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Top Level Namespace
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+  
+    
+  
+    
+      <dt class="r1">Includes:</dt>
+      <dd class="r1">BasicTool, StringTool</dd>
+      
+    
+  
+  
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Defined Under Namespace</h2>
+<p class="children">
+  
+    
+  
+    
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Link.html" title="Link (class)">Link</a></span>, <span class='object_link'><a href="NN.html" title="NN (class)">NN</a></span>, <span class='object_link'><a href="SimplePerceptron.html" title="SimplePerceptron (class)">SimplePerceptron</a></span>
+    
+  
+</p>
+
+
+
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#test-instance_method" title="#test (instance method)">- (Object) <strong>test</strong>(nn, conf) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#training-instance_method" title="#training (instance method)">- (Object) <strong>training</strong>(nn, conf) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<h3 id="label-%E3%83%88%E3%83%AC%E3%83%BC%E3%83%8B%E3%83%B3%E3%82%B0.">トレーニング.</h3>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="test-instance_method">
+  
+    - (<tt>Object</tt>) <strong>test</strong>(nn, conf) 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'NN.rb', line 191</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_test'>test</span><span class='lparen'>(</span><span class='id identifier rubyid_nn'>nn</span><span class='comma'>,</span> <span class='id identifier rubyid_conf'>conf</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_test_num'>test_num</span> <span class='op'>=</span> <span class='int'>100</span> <span class='semicolon'>;</span>
+  <span class='id identifier rubyid_test_num'>test_num</span><span class='period'>.</span><span class='id identifier rubyid_times'>times</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_num'>num</span><span class='op'>|</span>
+    <span class='id identifier rubyid_t'>t</span> <span class='op'>=</span> <span class='id identifier rubyid_rand'>rand</span><span class='lparen'>(</span><span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='symbol'>:training_data</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_training_data'>training_data</span> <span class='op'>=</span> <span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='symbol'>:training_data</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_t'>t</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:input</span><span class='rbracket'>]</span> <span class='semicolon'>;</span>
+    <span class='id identifier rubyid_nn'>nn</span><span class='period'>.</span><span class='id identifier rubyid_propagation'>propagation</span><span class='lparen'>(</span><span class='id identifier rubyid_training_data'>training_data</span><span class='rparen'>)</span> <span class='semicolon'>;</span>
+    <span class='id identifier rubyid_teacher_datas'>teacher_datas</span><span class='op'>=</span> <span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='symbol'>:training_data</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_t'>t</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:output</span><span class='rbracket'>]</span> <span class='semicolon'>;</span>
+
+    <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span> <span class='id identifier rubyid_nn'>nn</span><span class='period'>.</span><span class='id identifier rubyid_nodes'>nodes</span><span class='period'>.</span><span class='id identifier rubyid_last'>last</span><span class='period'>.</span><span class='id identifier rubyid_get_w'>get_w</span><span class='period'>.</span><span class='id identifier rubyid_round'>round</span><span class='lparen'>(</span><span class='int'>3</span><span class='rparen'>)</span> <span class='embexpr_end'>}</span><span class='tstring_content'>,</span><span class='embexpr_beg'>#{</span> <span class='id identifier rubyid_teacher_datas'>teacher_datas</span><span class='lbracket'>[</span><span class='int'>5</span><span class='rbracket'>]</span> <span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>if</span> <span class='lparen'>(</span> <span class='id identifier rubyid_nn'>nn</span><span class='period'>.</span><span class='id identifier rubyid_nodes'>nodes</span><span class='period'>.</span><span class='id identifier rubyid_last'>last</span><span class='period'>.</span><span class='id identifier rubyid_get_w'>get_w</span><span class='period'>.</span><span class='id identifier rubyid_round'>round</span><span class='lparen'>(</span><span class='int'>3</span><span class='rparen'>)</span><span class='op'>-</span> <span class='id identifier rubyid_teacher_datas'>teacher_datas</span><span class='lbracket'>[</span><span class='int'>5</span><span class='rbracket'>]</span> <span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_abs'>abs</span> <span class='op'>&lt;</span> <span class='float'>0.1</span>
+      <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>○</span><span class='tstring_end'>&quot;</span></span> <span class='semicolon'>;</span>
+    <span class='kw'>else</span>
+      <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>☓</span><span class='tstring_end'>&quot;</span></span> <span class='semicolon'>;</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="training-instance_method">
+  
+    - (<tt>Object</tt>) <strong>training</strong>(nn, conf) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<h3 id="label-%E3%83%88%E3%83%AC%E3%83%BC%E3%83%8B%E3%83%B3%E3%82%B0">トレーニング</h3>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'NN.rb', line 175</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_training'>training</span><span class='lparen'>(</span><span class='id identifier rubyid_nn'>nn</span><span class='comma'>,</span> <span class='id identifier rubyid_conf'>conf</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_count'>count</span> <span class='op'>=</span> <span class='int'>0</span> <span class='semicolon'>;</span>
+  <span class='int'>100000</span><span class='period'>.</span><span class='id identifier rubyid_times'>times</span> <span class='kw'>do</span> 
+    <span class='id identifier rubyid_t'>t</span> <span class='op'>=</span> <span class='id identifier rubyid_rand'>rand</span><span class='lparen'>(</span><span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='symbol'>:training_data</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span><span class='op'>-</span><span class='int'>1</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_err'>err</span> <span class='op'>=</span> <span class='id identifier rubyid_nn'>nn</span><span class='period'>.</span><span class='id identifier rubyid_training_one_time'>training_one_time</span><span class='lparen'>(</span><span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='symbol'>:training_data</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_t'>t</span><span class='rbracket'>]</span><span class='rparen'>)</span>    
+    <span class='kw'>if</span> <span class='id identifier rubyid_err'>err</span> <span class='op'>&lt;</span> <span class='float'>0.01</span>
+      <span class='id identifier rubyid_count'>count</span> <span class='op'>+=</span> <span class='int'>1</span> <span class='semicolon'>;</span>    <span class='comment'>#教師データとの誤差が小さければ
+</span>    <span class='kw'>else</span>
+      <span class='id identifier rubyid_count'>count</span> <span class='op'>=</span> <span class='int'>0</span> <span class='semicolon'>;</span>
+    <span class='kw'>end</span>
+   <span class='kw'>break</span>  <span class='kw'>if</span> <span class='id identifier rubyid_count'>count</span> <span class='op'>&gt;</span> <span class='int'>100</span> <span class='comment'># 正解が連続100回持続すれば
+</span>  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+    <div id="footer">
+  Generated on Wed Mar 30 08:50:54 2016 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.7.4 (ruby-2.1.2).
+</div>
+
+  </body>
+</html>

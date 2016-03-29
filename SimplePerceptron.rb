@@ -10,10 +10,8 @@
 $LOAD_PATH.push(File::dirname($0)) ;
 require "pry"
 require "yaml"
-require "Unit"
+require "Node"
 require "Link"
-# require '/home/okano/lab/tkylibs/rubyOkn/BasicTool'
-# require '/home/okano/lab/tkylibs/rubyOkn/StringTool'
 
 include BasicTool
 include StringTool;
@@ -30,7 +28,6 @@ class SimplePerceptron
     @links = Array.new ;
     initialize_units(input_unit_num) ;
     initialize_links(link_num) ;
-    # initialize_output_units() ;
   end
 
   
@@ -39,9 +36,9 @@ class SimplePerceptron
   # @param input_datas Array
   #
   def initialize_units(unit_num)
-    @output_unit = Unit.new();  #出力unitの生成
+    @output_unit = Node.new();  #出力unitの生成
     unit_num.times do |unit_num|
-      @input_units.push(Unit.new()) ; #入力ユニットの生成
+      @input_units.push(Node.new()) ; #入力ユニットの生成
     end
   end
 
@@ -56,7 +53,7 @@ class SimplePerceptron
 
   #
   # === 出力ノードの初期化
-  # @param unit Unit
+  # @param unit Node
   # @param link_num Integer :number of links
   #
   def initialize_links(link_num)
